@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Statistika trčanja</h2>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-primary">← Natrag na popis</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" action="{{ url_for('statistika') }}">
+            <label for="godina" class="form-label">Filtriraj po godini:</label>
+            <div class="input-group">
+                <select class="form-select" id="godina" name="godina">
+                    <option value="">Sve godine</option>
+                    {% for godina in dostupne_godine %}
+                    <option value="{{ godina }}" {% if odabrana_godina == godina %}selected{% endif %}>
+                        {{ godina }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Filtriraj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Ukupna udaljenost</h5>
+                <h3 class="card-text text-primary">{{ statistike.ukupna_udaljenost }} km</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Prosječna brzina</h5>
+                <h3 class="card-text text-primary">{{ statistike.prosjecna_brzina }} km/h</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Broj trčanja</h5>
+                <h3 class="card-text text-primary">{{ statistike.broj_trcanja }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Udaljenost po mjesecima (km)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="udaljenostiChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Prosječna brzina po mjesecima (km/h)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="brzineChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Uključivanje Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Prikaz grafikona za udaljenosti po mjesecima
+document.addEventListener('DOMContentLoaded', function() {
+    const udaljenostiCtx = document.getElementById('udaljenostiChart').getContext('2d');
+    const udaljenostiChart = new Chart(udaljenostiCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ mjeseci|tojson }},
+            datasets: [{
+                label: 'Udaljenost (km)',
+                data: {{ udaljenosti_po_mjesecima }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Kilometri'
+                    }
+                }
+            }
+        }
+    });
+
+    // Prikaz grafikona za brzine po mjesecima
+    const brzineCtx = document.getElementById('brzineChart').getContext('2d');
+    const brzineChart = new Chart(brzineCtx, {
+        type: 'line',
+        data: {
+            labels: {{ mjeseci|tojson }},
+            datasets: [{
+                label: 'Prosječna brzina (km/h)',
+                data: {{ brzine_po_mjesecima }},
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointRadius: 4,
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'km/h'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

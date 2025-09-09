@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Uredi trčanje</h2>
+<form method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label for="datum" class="form-label">Datum:</label>
+        <input type="date" id="datum" name="datum" value="{{ trcanje.datum.date() }}" class="form-control" required max="{{ today }}">
+
+    </div>
+
+    <div class="mb-3">
+        <label for="udaljenost" class="form-label">Udaljenost (km):</label>
+        <input type="number" step="0.01" id="udaljenost" name="udaljenost" value="{{ trcanje.udaljenost }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="trajanje" class="form-label">Trajanje (min):</label>
+        <input type="number" step="0.1" id="trajanje" name="trajanje" value="{{ trcanje.trajanje }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="komentar" class="form-label">Komentar:</label>
+        <textarea id="komentar" name="komentar" class="form-control">{{ trcanje.komentar }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Spremi promjene</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Odustani</a>
+</form>
+{% endblock %}

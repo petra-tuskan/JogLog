@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <a href="{{ url_for('novo_trcanje') }}" class="btn btn-lg btn-success">
+        Novo trčanje
+    </a>
+</div>
+
+<!-- Osnovne statistike -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Ukupna udaljenost</h5>
+                <h3 class="card-text text-primary">{{ ukupna_udaljenost }} km</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Prosječna brzina</h5>
+                <h3 class="card-text text-primary">{{ prosjecna_brzina }} km/h</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Broj trčanja</h5>
+                <h3 class="card-text text-primary">{{ broj_trcanja }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">Popis trčanja</h4>
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Datum</th>
+            <th>Udaljenost (km)</th>
+            <th>Trajanje (min)</th>
+            <th>Brzina (km/h)</th>
+            <th>Komentar</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in trcanja %}
+        <tr>
+            <td>{{ t.datum.date() }}</td>
+            <td>{{ t.udaljenost }}</td>
+            <td>{{ t.trajanje }}</td>
+            <td>{{ t.prosjecna_brzina }}</td>
+            <td>{{ t.komentar or "" }}</td>
+            <td>
+                <a href="{{ url_for('uredi_trcanje', trcanje_id=t.id) }}" class="btn btn-sm btn-warning">Uredi</a>
+                <form action="{{ url_for('obrisi_trcanje', trcanje_id=t.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sigurno obrisati?')">Obriši</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Nema unosa.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
