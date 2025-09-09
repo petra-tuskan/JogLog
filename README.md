@@ -12,6 +12,7 @@ Korištene tehnologije za frontend su HTML, CSS, Bootstrap i Chart.js, dok su Py
 ## Pokretanje aplikacije pomoću Dockera
 #### Kloniranje repozitorija
 `git clone https://github.com/petra-tuskan/JogLog.git`
+######
 `cd JogLog`
 
 #### Stvaranje Docker image-a
